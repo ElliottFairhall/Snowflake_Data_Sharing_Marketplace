@@ -63,12 +63,12 @@ available.
 CREATE OR REPLACE SHARE customer_analytics_share;
 
 -- Step 2: Grant access to the database and schema
-GRANT USAGE ON DATABASE analytics TO SHARE customer_analytics_share;
-GRANT USAGE ON SCHEMA analytics.marts TO SHARE customer_analytics_share;
+GRANT USAGE ON DATABASE sharing_analytics TO SHARE customer_analytics_share;
+GRANT USAGE ON SCHEMA sharing_analytics.marts TO SHARE customer_analytics_share;
 
 -- Step 3: Grant access to specific objects
-GRANT SELECT ON TABLE analytics.marts.dim_customers TO SHARE customer_analytics_share;
-GRANT SELECT ON TABLE analytics.marts.fct_orders TO SHARE customer_analytics_share;
+GRANT SELECT ON TABLE sharing_analytics.marts.dim_customers TO SHARE customer_analytics_share;
+GRANT SELECT ON TABLE sharing_analytics.marts.fct_orders TO SHARE customer_analytics_share;
 
 -- Step 4: Add consumer accounts
 ALTER SHARE customer_analytics_share ADD ACCOUNTS = org1.consumer_account;
@@ -79,15 +79,15 @@ and column masking:
 
 ```sql
 -- Create a secure view for sharing
-CREATE OR REPLACE SECURE VIEW analytics.marts.shared_customer_summary AS
+CREATE OR REPLACE SECURE VIEW sharing_analytics.marts.shared_customer_summary AS
 SELECT
     customer_segment,
     COUNT(*) AS customer_count,
     SUM(lifetime_revenue) AS total_revenue
-FROM analytics.marts.dim_customers
+FROM sharing_analytics.marts.dim_customers
 GROUP BY customer_segment;
 
-GRANT SELECT ON VIEW analytics.marts.shared_customer_summary TO SHARE customer_analytics_share;
+GRANT SELECT ON VIEW sharing_analytics.marts.shared_customer_summary TO SHARE customer_analytics_share;
 ```
 
 ### 📥 Consumer Workflow — Accessing Shared Data
